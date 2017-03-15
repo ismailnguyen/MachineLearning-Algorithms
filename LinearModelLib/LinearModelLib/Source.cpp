@@ -9,9 +9,8 @@ double random_weight(double min, double max)
 
 double * linear_create_model(int inputDimension)
 {
-	double * model;
+	double * model = new double[inputDimension];
 
-	//  ALLOUER LE MODELE avec new
 	for (int i = 0; i < inputDimension; i++)
 	{
 		model[i] = random_weight(-1, 1);
@@ -27,8 +26,7 @@ void linear_remove_model(double * model)
 		return;
 	}
 
-	// DELETE []
-	free(model);
+	delete[] model;
 }
 
 /*
@@ -36,40 +34,35 @@ void linear_remove_model(double * model)
 */
 int linear_fit_regression(double * model, double * inputs, int inputsSize, int inputSize, double * outputs, int outputsSize)
 {
-	int W = 0;
+	// Use eigen, inverse matrix
 
-	double step = 1;
-
-	for (int iteration = 0; iteration < inputsSize; iteration++)
-	{
-		for (int i = 0; i < inputsSize; i++)
-		{
-			// Iterer sur les entrees 
-			W = W + step * (inputs[i] * model[i]) * linear_predict(model, inputs, inputsSize);
-		}
-	}
-
-	return W;
+	return 0;
 }
 
 /*
 	W = W + a(Y^k * g(X^k)) X^k
 */
-int linear_fit_classification_rosenblatt(double * model, double * inputs, int inputsSize, int inputSize, int iterationNumber, double step)
+int linear_fit_classification_rosenblatt(double * model, double * inputs, int inputsSize, int inputSize, int iterationNumber, double step, double * outputs)
 {
-	int W = 0;
+	int success = 0;
 
 	for (int iteration = 0; iteration < iterationNumber; iteration++)
 	{
 		for (int i = 0; i < inputsSize; i++)
 		{
 			for (int j = 0; j < inputSize; j++)
-				if ///
-				W = W + step * (inputs[i * inputSize + j] * model[j]) * outputs[i];
+			{
+				if (outputs[i] != linear_classify(model, inputs, inputSize))
+				{
+					model[i] = model[i] + step * (inputs[i * inputSize + j] - outputs[i]) * model[j];
+
+					success = 1;
+				}
+			}
 		}
 	}
 
-	return W;
+	return success;
 }
 
 double linear_classify(double * model, double * input, int inputSize)
