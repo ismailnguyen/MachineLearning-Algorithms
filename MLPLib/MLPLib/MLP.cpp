@@ -81,7 +81,34 @@ int mlp_fit_classification_backdrop(MLP * model, double * inputs, int inputsSize
 
 double * mlp_classify(MLP * model, double * input, int inputSize)
 {
-	return nullptr;
+	for (int i = 1; i <= model->nlp[0]; ++i)
+	{
+		model->computedSum[0][i] = input[i - 1];
+	}
+
+	for (int l = 1; l <= model->numLayers; ++l)
+	{
+		for (int j = 1; j <= model->nlp[l]; ++j)
+		{
+			model->computedOutputs[l][j] = 0;
+
+			for (int k = 0; k <= model->nlp[l - 1]; ++k)
+			{
+				model->computedOutputs[l][j] += model->weights[l][k][j] * model->computedSum[l - 1][k];
+			}
+
+			if (model->numLayers - 1 > 1)
+			{
+				model->computedSum[l][j] = tanh(model->computedOutputs[l][j]);
+			}
+			else
+			{
+				model->computedSum[l][j] = model->computedOutputs[l][j];
+			}
+		}
+	}
+
+	return model->computedOutputs[model->numLayers - 1];
 }
 
 double * mlp_predict(MLP * model, double * input, int inputSize)
