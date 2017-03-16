@@ -2,7 +2,9 @@
 
 MLP * mlp_create_model(int numLayers, int * nlp)
 {
-	return nullptr;
+	MLP * model = new MLP();
+	model->weights = new double**[(int) nlp];
+
 }
 
 void mlp_remove_model(MLP * model)

@@ -1,5 +1,9 @@
 #include <cstdlib>
+#include <iostream>
+#include <Eigen/Dense>
 #include "Source.h"
+
+using Eigen::MatrixXd;
 
 double random_weight(double min, double max)
 {
@@ -34,9 +38,47 @@ void linear_remove_model(double * model)
 */
 int linear_fit_regression(double * model, double * inputs, int inputsSize, int inputSize, double * outputs, int outputsSize)
 {
-	// Use eigen, inverse matrix
+	Eigen::MatrixXd X(inputsSize / outputsSize, outputsSize + 1);
+	Eigen::MatrixXd Y(inputsSize / outputsSize, 1);
+	Eigen::MatrixXd Z(1, outputsSize + 1);
 
-	return 0;
+	for (int i = 0, k = 0; i < inputsSize; i+= outputsSize, ++k)
+	{
+		for (int j = 0; j < outputsSize; j++)
+		{
+			if (j == 0)
+			{
+				X(k, j) = 1;
+			}
+			else
+			{
+				X(k, j) = inputs[i + j - 1];
+			}
+		}
+	}
+
+	for (int i = 0; i < inputsSize / outputsSize; ++i)
+	{
+		Y(i, 0) = outputs[i];
+	}
+
+	Eigen::MatrixXd XT = X;
+	XT.transposeInPlace();
+
+	Z = XT * X;
+	Z.inverse();
+
+	if (inputsSize / outputsSize < outputsSize + 1)
+	{
+		Z = Z * XT;
+	}
+	
+	Z = Z * Y;
+
+	for (int i = 0; i < outputsSize + 1; ++1)
+	{
+		model[i] = Z(i, 0);
+	}
 }
 
 /*
