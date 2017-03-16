@@ -28,7 +28,7 @@ MLP * mlp_create_model(int numLayers, int * nlp)
 
 			for (int k = 0; k < nlp[i]; ++k)
 			{
-				model[i][j][k] = randomValue(-1, 1);
+				model->weights[i][j][k] = randomValue(-1, 1);
 			}
 		}
 	}
@@ -36,7 +36,6 @@ MLP * mlp_create_model(int numLayers, int * nlp)
 	for (int i = 0; i < numLayers; i++)
 	{
 		model->computedOutputs[i] = new double[nlp[i] + 1];
-
 		model->computedOutputs[i][0] = 1;
 
 		model->computedSum[i] = new double[nlp[i] + 1];
@@ -48,6 +47,26 @@ MLP * mlp_create_model(int numLayers, int * nlp)
 
 void mlp_remove_model(MLP * model)
 {
+	for (int i = 0; i < model->numLayers; i++)
+	{
+		if (model->weights != nullptr)
+		{
+			for (int j = 0; j < model->nlp[i]; j++)
+			{
+				delete[] model->weights[i][j];
+			}
+		}
+
+		delete[] model->weights[i];
+		delete[] model->computedOutputs[i];
+		delete[] model->computedSum[i];
+	}
+
+	delete[] model->weights;
+	delete[] model->computedOutputs;
+	delete[] model->computedSum;
+	delete[] model->deltas;
+	delete[] model->nlp;
 }
 
 int mlp_fit_regression_backdrop(MLP * model, double * inputs, int inputsSize, int inputSize, double * outputs, int outputsSize, int outpoutSize, int iterationNumber, double step)
