@@ -75,10 +75,12 @@ int linear_fit_regression(double * model, double * inputs, int inputsSize, int i
 	
 	Z = Z * Y;
 
-	for (int i = 0; i < outputsSize + 1; ++1)
+	for (int i = 0; i < outputsSize + 1; ++i)
 	{
 		model[i] = Z(i, 0);
 	}
+
+	return 1;
 }
 
 /*

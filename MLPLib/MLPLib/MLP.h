@@ -9,6 +9,7 @@ extern "C"
 		double** computedSum;
 		double** deltas;
 		int numLayers;
+		int * nlp;
 	};
 
 	__declspec(dllexport) MLP * mlp_create_model(int numLayers, int * nlp);

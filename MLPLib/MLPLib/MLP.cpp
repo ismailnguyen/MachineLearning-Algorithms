@@ -1,10 +1,37 @@
+#include <cstdlib>
+#include <iostream>
 #include "MLP.h"
+
+double randomValue(double min, double max)
+{
+	double random = (double)rand() / RAND_MAX;
+	return min + random * (max - min);
+}
 
 MLP * mlp_create_model(int numLayers, int * nlp)
 {
 	MLP * model = new MLP();
-	model->weights = new double**[(int) nlp];
+	model->weights = new double**[numLayers];
+	model->computedOutputs = new double*[numLayers];
+	model->computedSum = new double*[numLayers];
+	model->deltas = new double*[numLayers];
+	model->numLayers = numLayers;
+	model->nlp = nlp;
 
+	for (int i = 0; i < numLayers; ++i)
+	{
+		model->weights[i] = new double*[nlp[i - 1] + 1];
+
+		for (int j = 0; j <= nlp[i - 1]; ++j)
+		{
+			model->weights[i][j] = new double[nlp[i] + 1];
+
+			for (int k = 0; k < nlp[i]; ++k)
+			{
+				model[i][j][k] = 
+			}
+		}
+	}
 }
 
 void mlp_remove_model(MLP * model)
