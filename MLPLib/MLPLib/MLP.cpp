@@ -28,10 +28,22 @@ MLP * mlp_create_model(int numLayers, int * nlp)
 
 			for (int k = 0; k < nlp[i]; ++k)
 			{
-				model[i][j][k] = 
+				model[i][j][k] = randomValue(-1, 1);
 			}
 		}
 	}
+
+	for (int i = 0; i < numLayers; i++)
+	{
+		model->computedOutputs[i] = new double[nlp[i] + 1];
+
+		model->computedOutputs[i][0] = 1;
+
+		model->computedSum[i] = new double[nlp[i] + 1];
+		model->computedSum[i][0] = 1;
+	}
+
+	return model;
 }
 
 void mlp_remove_model(MLP * model)
